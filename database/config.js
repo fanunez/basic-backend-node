@@ -13,11 +13,11 @@ const dbConn = async() => {
             useFindAndModify: false 
         });
 
-        console.log('¡Base de datos en linea!'.green);
+        console.log('¡Base de datos en linea!'.bgGreen.white);
 
     } catch (error) {
         console.log(error);
-        throw new Error('Error iniciando la base de datos...'.red);
+        throw new Error('Error iniciando la base de datos...'.bgRed.red);
     }
 
 }

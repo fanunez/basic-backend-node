@@ -1,8 +1,13 @@
 
 const { request, response } = require('express');
+const bcryptjs = require('bcryptjs');
 
 const User = require('../models/user')
+/*
+    RECORDAR!
+    Validar todos los endpoints sin importar las validaciones del frontend
 
+*/
 
 
 const getUser = (req = request, res = response) => {
@@ -21,10 +26,18 @@ const getUser = (req = request, res = response) => {
 const postUser = async(req, res) => {
 
     // const body = req.body;
-    const body = req.body;
-    const user = new User( body );
+    const { name, email, password, role } = req.body;
+    const user = new User({ name, email, password, role });
 
-    // esperar guardado
+    // Verificar si el correo existe
+
+
+    // Encriptar password
+    const salt = bcryptjs.genSaltSync(); //Numero de vueltas para dificultar descifrado
+    user.password = bcryptjs.hashSync( password, salt ); // hashing
+
+
+    // Guardar en db y esperar guardado
     await user.save();
 
     res.json({

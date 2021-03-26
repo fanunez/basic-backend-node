@@ -1,6 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const { dbConn } = require('../database/config');
 
 class Server {
 
@@ -9,11 +10,19 @@ class Server {
         this.port = process.env.PORT;
         this.usersPath = '/api/users';
 
+        // Conectar a base de datos
+        this.connectDatabase();
+
         // Middlewares: Funciones que siempre se ejecutan al levantar el servidor
         this.middlewares();
 
         // Rutas de la aplicacion
         this.routes();
+    }
+
+
+    async connectDatabase() {
+        await dbConn();
     }
 
 
@@ -40,7 +49,7 @@ class Server {
 
     listen() {
         this.app.listen( this.port, () => {
-            console.log(`App running in port ${ this.port }`);
+            console.log(`App running on port ${ this.port }`);
         });
     }
 

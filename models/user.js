@@ -36,5 +36,17 @@ const UserSchema = Schema({
 
 });
 
+/*
+    Sobreescribir metodo toJSON.
+    Tiene que ser una funcion normal, porque se utilizara "this". Una funcion de flecha mantiene
+    a lo que apunta el this fuera de la misma.
+    Se necesita solo para la instancia creada.
+*/
+UserSchema.methods.toJSON = function() {
+    const { __v, password, ...user } = this.toObject();
+    return user;
+}
+
+
 
 module.exports = model( 'User', UserSchema );

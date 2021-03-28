@@ -83,7 +83,7 @@ const deleteUser = async(req, res) => {
 
     const { id } = req.params;
 
-    // fisicamente lo borramos
+    // fisicamente lo borramos ( no recomendado )
     // const user = await User.findByIdAndDelete( id );
 
     const user = await User.findByIdAndUpdate( id, { state: false } );
@@ -91,18 +91,9 @@ const deleteUser = async(req, res) => {
 }
 
 
-// const patchUser = (req, res) => {
-//     res.json({
-//         msg: 'patch API - Controller'
-//     });
-// }
-
-
-
 module.exports = {
     getUser,
     postUser,
     putUser,
-    // patchUser,
     deleteUser
 }

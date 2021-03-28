@@ -10,8 +10,7 @@ const { roleValidator,
 
 const { getUser, 
         putUser, 
-        postUser, 
-        patchUser,
+        postUser,
         deleteUser
 } = require('../controllers/user');
 
@@ -48,10 +47,6 @@ router.delete( '/:id', [
         check('id').custom( existUserById ),
         fieldValidator
 ],deleteUser);
-
-// Actualizacion parcial de datos
-// router.patch( '/', patchUser);
-
 
 
 module.exports = router;

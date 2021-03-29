@@ -23,6 +23,7 @@ const UserSchema = Schema({
     role: {
         type: String,
         required: true,
+        default: 'USER_ROLE' ,
         name: ['ADMIN_ROLE', 'USER_ROLE']
     },
     state: {

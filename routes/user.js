@@ -1,8 +1,13 @@
-
+// Importaciones Node
 const { Router } = require('express');
 const { check } = require('express-validator');
 
+// Middlewares
 const { fieldValidator } = require('../middlewares/field-validator.js');
+const { validateJWT } = require('../middlewares/jwt-validator.js');
+const { isAdminRole, hasRole } = require('../middlewares/validate-role.js');
+
+// Helpers
 const { roleValidator,
         emailValidator,
         existUserById 
@@ -14,15 +19,16 @@ const { getUser,
         deleteUser
 } = require('../controllers/user');
 
+// Modelos
 const Role = require('../models/role');
 
 const router = Router();
 
 
-
+// Traer recursos paginados
 router.get( '/', getUser);
 
-// Usualmente para actualizar recursos
+// Actualizar recursos
 router.put( '/:id', [
         check('id', 'No es un ID válido').isMongoId(),
         check('id').custom( existUserById ),
@@ -30,7 +36,7 @@ router.put( '/:id', [
         fieldValidator
 ], putUser);
 
-// Usualmente para crear recursos
+// Crear recursos
 router.post( '/', [
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('password', 'La contraseña debe tener más de 6 carácteres').isLength({ min: 6 }),
@@ -43,10 +49,13 @@ router.post( '/', [
 
 // Eliminar un usuario ( no se recomienda eliminar fisicamente debido a la integridad referencial, esto es: Si el usuario a modificado cosas dentro de la aplicacion )
 router.delete( '/:id', [
+        validateJWT,
+        // isAdminRole,
+        hasRole('ADMIN_ROLE'), // tantos roles como el endpoint necesite 
         check('id', 'No es un ID válido').isMongoId(),
         check('id').custom( existUserById ),
         fieldValidator
-],deleteUser);
+], deleteUser);
 
 
 module.exports = router;

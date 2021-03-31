@@ -1,5 +1,5 @@
 
-const { Role, User, Category } = require('../models');
+const { Role, User, Category, Product } = require('../models');
 
 // Verificacion de rol
 const roleValidator =  async( role = '' ) => {
@@ -33,11 +33,28 @@ const existCategoryById = async( id ) => {
     }
 }
 
+// Verificacion de existencia de id de producto
+const existProductById = async( id ) => {
+    const exist = await Product.findById( id );
+    if( !exist ) {
+        throw new Error(`No existe categoria con id ${ id }`);
+    }
+}
+
+// // Verificacion de existencia de categoria con nombre
+// const existCategoryByName = async( name = '' ) => {
+//     name = name.toUpperCase();
+//     const exist = await Category.findOne({ name });
+//     if( !exist ) {
+//         throw new Error(`No existe categoria con nombre ${ name }`);
+//     }
+// }
 
 
 module.exports = {
     roleValidator,
     emailValidator,
     existUserById,
-    existCategoryById
+    existCategoryById,
+    existProductById
 }

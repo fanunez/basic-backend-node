@@ -13,7 +13,8 @@ class Server {
             authPath: '/api/auth',
             usersPath: '/api/users',
             categoryPath: '/api/categories',
-            productPath: '/api/products'
+            productPath: '/api/products',
+            searchPath: '/api/search'
         }
 
         // Conectar a base de datos
@@ -52,7 +53,7 @@ class Server {
         this.app.use( this.paths.usersPath, require('../routes/user') );
         this.app.use( this.paths.categoryPath, require('../routes/category') );
         this.app.use( this.paths.productPath, require('../routes/product') );
-        
+        this.app.use( this.paths.searchPath, require('../routes/search') );
     }
 
 

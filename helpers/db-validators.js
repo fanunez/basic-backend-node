@@ -50,11 +50,24 @@ const existProductById = async( id ) => {
 //     }
 // }
 
+// Verificacion de colecciones
+const collectionAllowed = ( collection = '', collections = [] ) => {
+    
+    const include = collections.includes( collection );
+    if( !include ) {
+        throw new Error(`No existe la coleccion ${ collection }. Por favor, utilice: ${ collections }`)
+    }
+
+    return true;
+}
+
+
 
 module.exports = {
     roleValidator,
     emailValidator,
     existUserById,
     existCategoryById,
-    existProductById
+    existProductById,
+    collectionAllowed
 }

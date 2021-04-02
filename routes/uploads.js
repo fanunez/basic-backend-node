@@ -6,12 +6,12 @@ const { check } = require('express-validator');
 const { fieldValidator } = require('../middlewares');
 
 // Controllers
-const { uploadFile } = require('../controllers/uploads');
+const { fileManager } = require('../controllers/uploads');
 
 const router = Router();
 
 // crear nuevo recurso
-router.post( '/', uploadFile )
+router.post( '/', fileManager )
 
 
 

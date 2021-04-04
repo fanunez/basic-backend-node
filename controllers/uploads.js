@@ -110,15 +110,6 @@ const showImage = async( req, res = response ) => {
             return res.status(500).json({ msg: 'Coleccion no implementada' });
     }
 
-    // Limpiar imagenes previas
-    if ( model.img ) {
-        // borrar imagen del servidor
-        const pathImage = path.join( __dirname, '../uploads', collection, model.img );
-        if ( fs.existsSync( pathImage ) ) {
-            return res.sendFile( pathImage );
-        }
-    }
-
     const pathImage = path.join( __dirname, '../assets/no-image.jpg' );
     res.sendFile( pathImage );
 

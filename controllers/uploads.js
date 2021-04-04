@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 
 const { response } = require("express");
 const { uploadFile } = require("../helpers");
@@ -9,13 +11,6 @@ const { User, Product } = require('../models');
 // https://github.com/richardgirges/express-fileupload/blob/master/example/server.js
 const fileManager = async( req, res = response ) => {
 
-    if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
-      res.status(400).send({
-          msg: 'No hay archivo que subir'
-      });
-      return;
-    }
-    
     // console.log('req.files >>>', req.files); // eslint-disable-line
     try {
         // Only texts and markdowns
@@ -61,6 +56,16 @@ const updateImage = async( req, res = response ) => {
             return res.status(500).json({ msg: 'Coleccion no implementada' });
     }
 
+    // Limpiar imagenes previas
+    if ( model.img ) {
+        // borrar imagen del servidor
+        const pathImage = path.join( __dirname, '../uploads', collection, model.img );
+        if ( fs.existsSync( pathImage ) ) {
+            fs.unlinkSync( pathImage );
+        }
+        
+    }
+
     // asociar y almacenar imagen al modelo
     const fileName = await uploadFile( req.files, undefined, collection );
     model.img = fileName;
@@ -72,10 +77,54 @@ const updateImage = async( req, res = response ) => {
 }
 
 
+const showImage = async( req, res = response ) => {
+
+    const { id, collection } = req.params;
+
+    //valor condicional
+    let model;
+
+    switch ( collection ) {
+        case 'users':
+            model = await User.findById( id ); 
+            if( !model ) {
+                return res.status(400).json({ 
+                    msg: `No existe usuario con id ${ id }`
+                })
+            }
+            break;
+        
+        case 'products':
+            model = await Product.findById( id ); 
+            if( !model ) {
+                return res.status(400).json({ 
+                    msg: `No existe producto con id ${ id }`
+                })
+            }
+            break;
+                    
+        default:
+            return res.status(500).json({ msg: 'Coleccion no implementada' });
+    }
+
+    // Limpiar imagenes previas
+    if ( model.img ) {
+        // borrar imagen del servidor
+        const pathImage = path.join( __dirname, '../uploads', collection, model.img );
+        if ( fs.existsSync( pathImage ) ) {
+            return res.sendFile( pathImage );
+        }
+    }
+
+    const pathImage = path.join( __dirname, '../assets/no-image.jpg' );
+    res.sendFile( pathImage );
+
+}
 
 
 
 module.exports = {
     fileManager,
-    updateImage
+    updateImage,
+    showImage
 }
